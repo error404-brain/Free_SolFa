@@ -1,0 +1,70 @@
+export const vi = {
+  common: {
+    brandName: "FreeSolFa",
+    tagline: "Học và thực hành ký âm nhạc lý miễn phí",
+    language: "Tiếng Việt",
+    trebleClefTitle: "Khóa Sol (Treble Clef)",
+    bassClefTitle: "Khóa Fa (Bass Clef)",
+    switchLanguage: "Chuyển ngôn ngữ",
+  },
+  hero: {
+    badge: "Nền tảng học nốt nhạc miễn phí",
+    title: "Học & Làm Quen Nốt Nhạc Trực Quan",
+    subtitle: "Nền tảng miễn phí giúp bạn dễ dàng học và làm quen với các nốt nhạc trên khuôn nhạc một cách trực quan nhất.",
+    startPractice: "Bắt đầu luyện tập",
+  },
+  nav: {
+    home: "Trang chủ",
+    practice: "Luyện tập",
+  },
+  practice: {
+    badge: "Danh sách bài tập",
+    title: "Luyện Tập Nhận Diện Nốt Nhạc",
+    subtitle: "Chọn bài tập phù hợp với trình độ của bạn để rèn luyện phản xạ đọc nốt nhạc và nhạc lý hàng ngày.",
+    levelBeginner: "Cơ bản",
+    levelIntermediate: "Trung cấp",
+    levelAdvanced: "Nâng cao",
+    startBtn: "Bắt đầu làm bài",
+    questionsCount: "câu hỏi",
+    timeMin: "phút",
+    filterAll: "Tất cả bài tập",
+    filterTreble: "Khóa Sol",
+    filterBass: "Khóa Fa",
+    exercises: [
+      {
+        id: "treble-basic",
+        title: "Nhận diện nốt nhạc Khóa Sol",
+        desc: "Thực hành nhận diện các nốt nhạc cơ bản trên Khóa Sol từ Đồ (C4) đến Đố (C5).",
+        clef: "treble",
+        level: "Khóa Sol",
+        questions: 10,
+        time: "3-5",
+      },
+      {
+        id: "bass-basic",
+        title: "Nhận diện nốt nhạc Khóa Fa",
+        desc: "Luyện tập đọc và ghi nhớ vị trí các nốt nhạc trầm trên Khóa Fa từ C2 đến C4.",
+        clef: "bass",
+        level: "Khóa Fa",
+        questions: 10,
+        time: "3-5",
+      },
+    ],
+  },
+  footer: {
+    description: "Nền tảng học ký âm và nhạc lý tương tác miễn phí",
+    copyright: "© 2026 FreeSolFa. Tất cả các quyền được bảo lưu.",
+    builtWith: "",
+  },
+  notes: {
+    C: "Đồ",
+    D: "Rê",
+    E: "Mi",
+    F: "Fa",
+    G: "Sol",
+    A: "La",
+    B: "Si",
+  },
+};
+
+export type TranslationType = typeof vi;

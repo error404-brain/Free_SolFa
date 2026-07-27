@@ -1,0 +1,70 @@
+import { TranslationType } from "./vi";
+
+export const en: TranslationType = {
+  common: {
+    brandName: "FreeSolFa",
+    tagline: "Free & modern interactive sheet music learning",
+    language: "English",
+    trebleClefTitle: "Treble Clef",
+    bassClefTitle: "Bass Clef",
+    switchLanguage: "Switch Language",
+  },
+  hero: {
+    badge: "Free Music Note Learning Platform",
+    title: "Learn & Get Familiar With Music Notes",
+    subtitle: "A free platform to help you easily learn and get familiar with music notes on the staff in a simple, visual way.",
+    startPractice: "Start Practice",
+  },
+  nav: {
+    home: "Home",
+    practice: "Practice",
+  },
+  practice: {
+    badge: "Exercise List",
+    title: "Practice Note Recognition",
+    subtitle: "Select exercises suitable for your level to build daily music reading speed and theory skills.",
+    levelBeginner: "Beginner",
+    levelIntermediate: "Intermediate",
+    levelAdvanced: "Advanced",
+    startBtn: "Start Exercise",
+    questionsCount: "questions",
+    timeMin: "mins",
+    filterAll: "All Exercises",
+    filterTreble: "Treble Clef",
+    filterBass: "Bass Clef",
+    exercises: [
+      {
+        id: "treble-basic",
+        title: "Treble Clef Note Reading",
+        desc: "Practice identifying basic notes from C4 to C5 on the Treble Clef.",
+        clef: "treble",
+        level: "Treble Clef",
+        questions: 10,
+        time: "3-5",
+      },
+      {
+        id: "bass-basic",
+        title: "Bass Clef Note Reading",
+        desc: "Practice reading and memorizing lower register notes on the Bass Clef from C2 to C4.",
+        clef: "bass",
+        level: "Bass Clef",
+        questions: 10,
+        time: "3-5",
+      },
+    ],
+  },
+  footer: {
+    description: "Free interactive music notation learning platform powered.",
+    copyright: "© 2026 FreeSolFa. All rights reserved.",
+    builtWith: "",
+  },
+  notes: {
+    C: "Do",
+    D: "Re",
+    E: "Mi",
+    F: "Fa",
+    G: "Sol",
+    A: "La",
+    B: "Ti",
+  },
+};
