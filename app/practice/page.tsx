@@ -17,7 +17,7 @@ export default function PracticePage() {
   });
 
   return (
-    <main className="min-h-screen bg-slate-50/50 py-12 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
         {/* HEADER SECTION */}
         <div className="text-center max-w-3xl mx-auto mb-12">

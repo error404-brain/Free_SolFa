@@ -9,7 +9,7 @@ export default function Home() {
   const { t } = useLanguage();
 
   return (
-    <main className="min-h-screen bg-slate-50/50 pb-20">
+    <main className="min-h-screen bg-slate-50 pb-20">
       {/* HERO OVERVIEW SECTION */}
       <HeroBanner />
 
