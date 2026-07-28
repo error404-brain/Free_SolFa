@@ -1,9 +1,6 @@
 import { ClefType, NotationMode } from "@/types/music";
 import { NOTE_BASE_STEPS, SOLFEGGIO_NAMES, CLEF_CONFIGS } from "@/constants/music";
 
-/**
- * Tính step khoảng cách nốt tương đối so với Dòng 1 của Khóa nhạc được chọn (Dòng 1 = step 0)
- */
 export const getPitchStep = (pitch: string, clef: ClefType = "treble"): number => {
   const match = pitch.match(/^([A-G])(#|b)?(\d)$/i);
   if (!match) return 0;
@@ -15,9 +12,6 @@ export const getPitchStep = (pitch: string, clef: ClefType = "treble"): number =
   return absoluteStep - clefOffset;
 };
 
-/**
- * Tự động tạo nhãn Solfeggio (Đồ, Rê, Mi...) hoặc Ký tự (A, B, C...)
- */
 export const getNoteLabel = (
   pitch: string,
   mode: NotationMode = "solfege",
@@ -38,9 +32,6 @@ export const getNoteLabel = (
   return `${baseName}${accSymbol}`;
 };
 
-/**
- * Tính các vị trí dòng kẻ phụ (Ledger Lines) cho nốt ở cao độ drawStep
- */
 export const getLedgerLines = (drawStep: number): number[] => {
   const ledgerLines: number[] = [];
   if (drawStep <= -2) {

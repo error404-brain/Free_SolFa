@@ -2,8 +2,9 @@ export type ClefType = "treble" | "bass" | "alto";
 export type NotationMode = "solfege" | "letter";
 
 export interface Note {
-  pitch: string; // e.g. 'C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5', ..., 'C8'
-  label?: string; // Tên nốt hiển thị (Đồ, Rê, Mi...)
+  pitch: string;
+  label?: string;
+  status?: "default" | "correct" | "incorrect";
 }
 
 export type OttavaType = "8va" | "15ma";
@@ -32,6 +33,8 @@ export interface MusicalStaffProps {
   useOttava?: boolean;
   notationMode?: NotationMode;
   showModeToggle?: boolean;
+  activeIndex?: number;
+  showLabels?: boolean;
 }
 
 export type TrebleClefStaffProps = Omit<MusicalStaffProps, "clef">;

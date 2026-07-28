@@ -1,32 +1,32 @@
 import { Note, ClefType } from "@/types/music";
 
 export interface ClefConfig {
-  glyph: string; // Unicode glyph trong font SMuFL (Bravura)
-  lineIndex: number; // Dòng kẻ đặt tâm khóa (0 = Dòng 1, 1 = Dòng 2, 2 = Dòng 3, 3 = Dòng 4)
-  basePitchOffset: number; // Offset số step so với Dòng 1
-  yOffset: number; // Tinh chỉnh tọa độ Y cho đẹp mắt
-  fontSizeRatio: number; // Tỉ lệ fontSize so với lineSpacing
+  glyph: string;
+  lineIndex: number;
+  basePitchOffset: number;
+  yOffset: number;
+  fontSizeRatio: number;
 }
 
 export const CLEF_CONFIGS: Record<ClefType, ClefConfig> = {
   treble: {
-    glyph: "\uE050", // Khóa Sol (gClef)
-    lineIndex: 1, // Dòng 2 (G4)
-    basePitchOffset: 0, // Dòng 1 = E4 (step 0)
+    glyph: "\uE050",
+    lineIndex: 1,
+    basePitchOffset: 0,
     yOffset: 2,
     fontSizeRatio: 4.2,
   },
   bass: {
-    glyph: "\uE062", // Khóa Fa (fClef)
-    lineIndex: 3, // Dòng 4 (F3)
-    basePitchOffset: -12, // Dòng 1 = G2 (step -12 so với E4)
+    glyph: "\uE062",
+    lineIndex: 3,
+    basePitchOffset: -12,
     yOffset: 0,
     fontSizeRatio: 4.2,
   },
   alto: {
-    glyph: "\uE05C", // Khóa Đô (cClef)
-    lineIndex: 2, // Dòng 3 (C4)
-    basePitchOffset: -6, // Dòng 1 = F3 (step -6 so với E4)
+    glyph: "\uE05C",
+    lineIndex: 2,
+    basePitchOffset: -6,
     yOffset: 0,
     fontSizeRatio: 4.0,
   },
@@ -81,3 +81,70 @@ export const DEFAULT_BASS_NOTES: Note[] = [
   { pitch: "B3" },
   { pitch: "C4" },
 ];
+
+export type DifficultyLevel = "easy" | "medium" | "hard";
+
+export const TREBLE_PITCHES_BY_LEVEL: Record<DifficultyLevel, string[]> = {
+  easy: ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"],
+  medium: ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5", "D5", "E5", "F5", "G5"],
+  hard: [
+    "C4",
+    "D4",
+    "E4",
+    "F4",
+    "G4",
+    "A4",
+    "B4",
+    "C5",
+    "D5",
+    "E5",
+    "F5",
+    "G5",
+    "A5",
+    "B5",
+    "C6",
+  ],
+};
+
+export const BASS_PITCHES_BY_LEVEL: Record<DifficultyLevel, string[]> = {
+  easy: ["C3", "D3", "E3", "F3", "G3", "A3", "B3", "C4"],
+  medium: ["G2", "A2", "B2", "C3", "D3", "E3", "F3", "G3", "A3", "B3", "C4"],
+  hard: [
+    "C2",
+    "D2",
+    "E2",
+    "F2",
+    "G2",
+    "A2",
+    "B2",
+    "C3",
+    "D3",
+    "E3",
+    "F3",
+    "G3",
+    "A3",
+    "B3",
+    "C4",
+  ],
+};
+
+export const TREBLE_PITCHES = TREBLE_PITCHES_BY_LEVEL.hard;
+export const BASS_PITCHES = BASS_PITCHES_BY_LEVEL.hard;
+
+export interface NoteChoice {
+  letter: string;
+  vi: string;
+  en: string;
+}
+
+export const NOTE_CHOICES: NoteChoice[] = [
+  { letter: "C", vi: "Đồ", en: "Do" },
+  { letter: "D", vi: "Rê", en: "Re" },
+  { letter: "E", vi: "Mi", en: "Mi" },
+  { letter: "F", vi: "Fa", en: "Fa" },
+  { letter: "G", vi: "Sol", en: "Sol" },
+  { letter: "A", vi: "La", en: "La" },
+  { letter: "B", vi: "Si", en: "Si" },
+];
+
+export const DEFAULT_SEQUENCE_COUNT = 10;

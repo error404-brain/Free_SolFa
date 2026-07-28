@@ -13,6 +13,8 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
   useOttava = true,
   notationMode: initialNotationMode = "solfege",
   showModeToggle = true,
+  activeIndex,
+  showLabels = true,
 }) => {
   const { t } = useLanguage();
   const [notationMode, setNotationMode] = useState<NotationMode>(initialNotationMode);
@@ -73,7 +75,6 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
 
   return (
     <div className="w-full flex flex-col gap-2">
-      {/* Notation Mode Toggle (Đồ Rê Mi vs A B C) */}
       {showModeToggle && (
         <div className="flex items-center justify-end">
           <div className="inline-flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-xs font-bold gap-1 transition-colors">
@@ -101,7 +102,6 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
         </div>
       )}
 
-      {/* Staff Canvas Container */}
       <div
         ref={containerRef}
         onMouseDown={handleMouseDown}
@@ -118,7 +118,6 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
           className="h-auto overflow-visible"
           style={{ minWidth: `${totalWidth}px` }}
         >
-          {/* 1. KHUNG 5 DÒNG KẺ (NGŨ TUYẾN) */}
           {[0, 1, 2, 3, 4].map((i) => {
             const y = topMargin + i * lineSpacing;
             return (
@@ -134,7 +133,6 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
             );
           })}
 
-          {/* Vạch mở đầu và vạch kép kết thúc */}
           <line
             x1={startX}
             y1={topMargin}
@@ -160,7 +158,6 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
             className="stroke-slate-700 dark:stroke-slate-400 transition-colors"
           />
 
-          {/* 2. KHÓA NHẠC VẼ THEO CLEF (TREBLE, BASS, ALTO CHUẨN SMUFL / BRAVURA FONT) */}
           <g transform={`translate(${startX + 32}, ${clefCenterY + clefConfig.yOffset})`}>
             <text
               x="0"
@@ -176,7 +173,6 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
             </text>
           </g>
 
-          {/* 3. ĐƯỜNG KÝ HIỆU OTTAVA (8va / 15ma) */}
           {ottavaGroups.map((group, idx) => {
             const groupMaxY = line1Y - group.maxDrawStep * (lineSpacing / 2);
             const ottavaY = groupMaxY - 26;
@@ -213,16 +209,60 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
             );
           })}
 
-          {/* 4. NỐT NHẠC VÀ DÒNG KẺ PHỤ */}
           {processedNotes.map((item, index) => {
             const { note, drawStep, noteX, noteY } = item;
             const stemUp = drawStep < 4;
             const displayLabel = note.label ?? getNoteLabel(note.pitch, notationMode, t.notes);
             const ledgerLines = getLedgerLines(drawStep);
 
+            const isCorrect = note.status === "correct";
+            const isIncorrect = note.status === "incorrect";
+            const isActive = activeIndex !== undefined && index === activeIndex;
+
+            const fillClass = isCorrect
+              ? "fill-emerald-500 dark:fill-emerald-400"
+              : isIncorrect
+              ? "fill-red-500 dark:fill-red-400"
+              : isActive
+              ? "fill-blue-600 dark:fill-blue-400"
+              : "fill-slate-900 dark:fill-slate-100";
+
+            const strokeClass = isCorrect
+              ? "stroke-emerald-500 dark:stroke-emerald-400"
+              : isIncorrect
+              ? "stroke-red-500 dark:stroke-red-400"
+              : isActive
+              ? "stroke-blue-600 dark:stroke-blue-400"
+              : "stroke-slate-900 dark:stroke-slate-100";
+
+            const textClass = isCorrect
+              ? "fill-emerald-600 dark:fill-emerald-400 font-black text-sm"
+              : isIncorrect
+              ? "fill-red-600 dark:fill-red-400 font-black text-sm"
+              : isActive
+              ? "fill-blue-600 dark:fill-blue-400 font-black text-sm"
+              : "fill-slate-700 dark:fill-slate-300 font-bold";
+
             return (
               <g key={index} transform={`translate(${noteX}, ${noteY})`}>
-                {/* Dòng kẻ phụ */}
+                {isActive && (
+                  <g transform="translate(0, -22)">
+                    <polygon
+                      points="0,0 -5,-7 5,-7"
+                      className="fill-blue-600 dark:fill-blue-400 animate-bounce"
+                    />
+                    <circle
+                      cx="0"
+                      cy="22"
+                      r="12"
+                      fill="none"
+                      strokeWidth="2.5"
+                      className="stroke-blue-500 dark:stroke-blue-400 opacity-80"
+                      strokeDasharray="4 2"
+                    />
+                  </g>
+                )}
+
                 {ledgerLines.map((lStep) => {
                   const lineRelY = (drawStep - lStep) * (lineSpacing / 2);
                   return (
@@ -233,47 +273,45 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
                       x2={13}
                       y2={lineRelY}
                       strokeWidth="1.5"
-                      className="stroke-slate-700 dark:stroke-slate-400 transition-colors"
+                      className={`${strokeClass} transition-colors`}
                     />
                   );
                 })}
 
-                {/* Đầu nốt */}
                 <ellipse
                   cx="0"
                   cy="0"
-                  rx="7"
-                  ry="5"
+                  rx="7.5"
+                  ry="5.5"
                   transform="rotate(-20)"
-                  className="fill-slate-900 dark:fill-slate-100 transition-colors"
+                  className={`${fillClass} transition-colors`}
                 />
 
-                {/* Thân nốt */}
                 <line
                   x1={stemUp ? 6 : -6}
                   y1={0}
                   x2={stemUp ? 6 : -6}
                   y2={stemUp ? -35 : 35}
-                  strokeWidth="1.8"
-                  className="stroke-slate-900 dark:stroke-slate-100 transition-colors"
+                  strokeWidth="2"
+                  className={`${strokeClass} transition-colors`}
                 />
 
-                {/* Tên nốt hiển thị phía dưới nốt thấp nhất */}
-                <text
-                  x="0"
-                  y={labelRowY - noteY}
-                  textAnchor="middle"
-                  fontSize="12"
-                  fontWeight="700"
-                  className="fill-slate-700 dark:fill-slate-300 transition-colors"
-                >
-                  {displayLabel}
-                </text>
+                {showLabels && (
+                  <text
+                    x="0"
+                    y={labelRowY - noteY}
+                    textAnchor="middle"
+                    fontSize="13"
+                    className={`${textClass} transition-colors`}
+                  >
+                    {displayLabel}
+                  </text>
+                )}
               </g>
             );
           })}
         </svg>
-    </div>
+      </div>
     </div>
   );
 };
