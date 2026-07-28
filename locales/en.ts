@@ -54,9 +54,9 @@ export const en: TranslationType = {
     ],
   },
   footer: {
-    description: "Free interactive music notation learning platform powered.",
-    copyright: "© 2026 FreeSolFa. All rights reserved.",
-    builtWith: "",
+    disclaimerTitle: "Disclaimer",
+    disclaimerText: "FreeSolFa is a free, non-profit educational tool created to help users practice basic music notation reading. This website does not hold commercial copyrights for any sheet music assets and accepts no legal liability regarding copyright claims.",
+    copyright: "© FreeSolFa • Free Community Learning Project",
   },
   notes: {
     C: "Do",

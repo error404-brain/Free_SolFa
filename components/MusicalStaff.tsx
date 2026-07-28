@@ -76,13 +76,13 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
       {/* Notation Mode Toggle (Đồ Rê Mi vs A B C) */}
       {showModeToggle && (
         <div className="flex items-center justify-end">
-          <div className="inline-flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/60 text-xs font-bold gap-1">
+          <div className="inline-flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-xs font-bold gap-1 transition-colors">
             <button
               onClick={() => setNotationMode("solfege")}
               className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
                 notationMode === "solfege"
-                  ? "bg-white text-blue-600 shadow-xs font-black"
-                  : "text-slate-500 hover:text-slate-900 font-medium"
+                  ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-xs font-black"
+                  : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium"
               }`}
             >
               Đồ Rê Mi
@@ -91,8 +91,8 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
               onClick={() => setNotationMode("letter")}
               className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
                 notationMode === "letter"
-                  ? "bg-white text-blue-600 shadow-xs font-black"
-                  : "text-slate-500 hover:text-slate-900 font-medium"
+                  ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-xs font-black"
+                  : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium"
               }`}
             >
               A B C
@@ -108,7 +108,7 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
         onMouseLeave={handleMouseLeave}
         onMouseUp={handleMouseUp}
         onMouseMove={handleMouseMove}
-        className={`w-full overflow-x-auto select-none rounded-2xl bg-white border border-slate-200/80 p-4 sm:p-6 shadow-sm no-scrollbar transition-shadow hover:shadow-md ${
+        className={`w-full overflow-x-auto select-none rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 p-4 sm:p-6 shadow-sm no-scrollbar transition-all hover:shadow-md ${
           isDragging ? "cursor-grabbing" : "cursor-grab"
         }`}
       >
@@ -128,8 +128,8 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
                 y1={y}
                 x2={endX}
                 y2={y}
-                stroke="#334155"
                 strokeWidth="1.5"
+                className="stroke-slate-700 dark:stroke-slate-400 transition-colors"
               />
             );
           })}
@@ -140,24 +140,24 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
             y1={topMargin}
             x2={startX}
             y2={line1Y}
-            stroke="#334155"
             strokeWidth="2.5"
+            className="stroke-slate-700 dark:stroke-slate-400 transition-colors"
           />
           <line
             x1={endX - 6}
             y1={topMargin}
             x2={endX - 6}
             y2={line1Y}
-            stroke="#334155"
             strokeWidth="1.5"
+            className="stroke-slate-700 dark:stroke-slate-400 transition-colors"
           />
           <line
             x1={endX}
             y1={topMargin}
             x2={endX}
             y2={line1Y}
-            stroke="#334155"
             strokeWidth="3.5"
+            className="stroke-slate-700 dark:stroke-slate-400 transition-colors"
           />
 
           {/* 2. KHÓA NHẠC VẼ THEO CLEF (TREBLE, BASS, ALTO CHUẨN SMUFL / BRAVURA FONT) */}
@@ -167,9 +167,9 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
               y="0"
               fontFamily="Bravura, 'Bravura Text', music, serif"
               fontSize={lineSpacing * clefConfig.fontSizeRatio}
-              fill="#0f172a"
               textAnchor="middle"
               dominantBaseline="middle"
+              className="fill-slate-900 dark:fill-slate-100 transition-colors"
               style={{ userSelect: "none" }}
             >
               {clefConfig.glyph}
@@ -188,7 +188,7 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
                   fontSize="13"
                   fontStyle="italic"
                   fontWeight="bold"
-                  fill="#2563eb"
+                  className="fill-blue-600 dark:fill-blue-400"
                 >
                   {group.type}
                 </text>
@@ -197,17 +197,17 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
                   y1={ottavaY}
                   x2={group.endX + 16}
                   y2={ottavaY}
-                  stroke="#2563eb"
                   strokeWidth="1.5"
                   strokeDasharray="4 3"
+                  className="stroke-blue-600 dark:stroke-blue-400"
                 />
                 <line
                   x1={group.endX + 16}
                   y1={ottavaY}
                   x2={group.endX + 16}
                   y2={ottavaY + 10}
-                  stroke="#2563eb"
                   strokeWidth="1.5"
+                  className="stroke-blue-600 dark:stroke-blue-400"
                 />
               </g>
             );
@@ -218,61 +218,61 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
             const { note, drawStep, noteX, noteY } = item;
             const stemUp = drawStep < 4;
             const displayLabel = note.label ?? getNoteLabel(note.pitch, notationMode, t.notes);
-          const ledgerLines = getLedgerLines(drawStep);
+            const ledgerLines = getLedgerLines(drawStep);
 
-          return (
-            <g key={index} transform={`translate(${noteX}, ${noteY})`}>
-              {/* Dòng kẻ phụ */}
-              {ledgerLines.map((lStep) => {
-                const lineRelY = (drawStep - lStep) * (lineSpacing / 2);
-                return (
-                  <line
-                    key={lStep}
-                    x1={-13}
-                    y1={lineRelY}
-                    x2={13}
-                    y2={lineRelY}
-                    stroke="#334155"
-                    strokeWidth="1.5"
-                  />
-                );
-              })}
+            return (
+              <g key={index} transform={`translate(${noteX}, ${noteY})`}>
+                {/* Dòng kẻ phụ */}
+                {ledgerLines.map((lStep) => {
+                  const lineRelY = (drawStep - lStep) * (lineSpacing / 2);
+                  return (
+                    <line
+                      key={lStep}
+                      x1={-13}
+                      y1={lineRelY}
+                      x2={13}
+                      y2={lineRelY}
+                      strokeWidth="1.5"
+                      className="stroke-slate-700 dark:stroke-slate-400 transition-colors"
+                    />
+                  );
+                })}
 
-              {/* Đầu nốt */}
-              <ellipse
-                cx="0"
-                cy="0"
-                rx="7"
-                ry="5"
-                transform="rotate(-20)"
-                fill="#0f172a"
-              />
+                {/* Đầu nốt */}
+                <ellipse
+                  cx="0"
+                  cy="0"
+                  rx="7"
+                  ry="5"
+                  transform="rotate(-20)"
+                  className="fill-slate-900 dark:fill-slate-100 transition-colors"
+                />
 
-              {/* Thân nốt */}
-              <line
-                x1={stemUp ? 6 : -6}
-                y1={0}
-                x2={stemUp ? 6 : -6}
-                y2={stemUp ? -35 : 35}
-                stroke="#0f172a"
-                strokeWidth="1.8"
-              />
+                {/* Thân nốt */}
+                <line
+                  x1={stemUp ? 6 : -6}
+                  y1={0}
+                  x2={stemUp ? 6 : -6}
+                  y2={stemUp ? -35 : 35}
+                  strokeWidth="1.8"
+                  className="stroke-slate-900 dark:stroke-slate-100 transition-colors"
+                />
 
-              {/* Tên nốt hiển thị phía dưới nốt thấp nhất với khoảng cách an toàn */}
-              <text
-                x="0"
-                y={labelRowY - noteY}
-                textAnchor="middle"
-                fontSize="12"
-                fill="#334155"
-                fontWeight="700"
-              >
-                {displayLabel}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
+                {/* Tên nốt hiển thị phía dưới nốt thấp nhất */}
+                <text
+                  x="0"
+                  y={labelRowY - noteY}
+                  textAnchor="middle"
+                  fontSize="12"
+                  fontWeight="700"
+                  className="fill-slate-700 dark:fill-slate-300 transition-colors"
+                >
+                  {displayLabel}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
     </div>
     </div>
   );

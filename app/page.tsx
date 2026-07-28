@@ -3,26 +3,32 @@
 import React from "react";
 import MusicalStaff from "@/components/MusicalStaff";
 import HeroBanner from "@/components/HeroBanner";
+import AdBanner from "@/components/AdBanner";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Home() {
   const { t } = useLanguage();
 
   return (
-    <main className="min-h-screen bg-slate-50 pb-20">
+    <main className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors pb-20">
       {/* HERO OVERVIEW SECTION */}
       <HeroBanner />
+
+      {/* DEMO AD BANNER (TOP) */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        <AdBanner label="QC Banner Ngang" />
+      </div>
 
       {/* INTERACTIVE DEMOS SECTION */}
       <section id="interactive-staff" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 flex flex-col gap-12">
         {/* KHÓA SOL (Treble Clef) */}
         <div className="w-full">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+            <h2 className="text-base font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-blue-600 dark:bg-blue-400"></span>
               {t.common.trebleClefTitle}
             </h2>
-            <span className="text-xs font-medium text-slate-400">
+            <span className="text-xs font-medium text-slate-400 dark:text-slate-500">
               C4 - C8 • Treble Range
             </span>
           </div>
@@ -65,11 +71,11 @@ export default function Home() {
         {/* KHÓA FA (Bass Clef) */}
         <div className="w-full">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-bold text-slate-800 uppercase tracking-wider flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
+            <h2 className="text-base font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 dark:bg-indigo-400"></span>
               {t.common.bassClefTitle}
             </h2>
-            <span className="text-xs font-medium text-slate-400">
+            <span className="text-xs font-medium text-slate-400 dark:text-slate-500">
               C2 - C4 • Bass Range
             </span>
           </div>
