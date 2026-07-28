@@ -18,6 +18,8 @@ export const vi = {
   nav: {
     home: "Trang chủ",
     practice: "Luyện tập",
+    about: "Giới thiệu",
+    privacy: "Bảo mật",
   },
   practice: {
     badge: "Danh sách bài tập",
@@ -62,10 +64,33 @@ export const vi = {
     roundCompletedSubtitle: "Đang chuẩn bị bản nhạc tiếp theo...",
     selectNotePrompt: "Chọn tên nốt nhạc tương ứng bên dưới",
   },
+  privacyPage: {
+    title: "Chính sách bảo mật",
+    subtitle: "Cam kết bảo vệ quyền riêng tư của người dùng tại FreeSolFa",
+    introTitle: "1. Thu thập thông tin",
+    introText: "FreeSolFa là nền tảng học nhạc lý trực tuyến miễn phí. Chúng tôi không yêu cầu đăng ký tài khoản hay thu thập bất kỳ thông tin cá nhân nhạy cảm nào. Tất cả dữ liệu cài đặt giao diện và ngôn ngữ của bạn chỉ lưu trữ tạm thời trên trình duyệt cá nhân.",
+    cookiesTitle: "2. Cookie & Quảng cáo (Google AdSense)",
+    cookiesText: "Trang web sử dụng dịch vụ quảng cáo của Google AdSense để duy trì chi phí máy chủ và phát triển nội dung miễn phí. Google AdSense có thể sử dụng cookie để hiển thị các quảng cáo phù hợp dựa trên các lượt truy cập trang web của bạn.",
+    contactTitle: "3. Thắc mắc & Khiếu nại",
+    contactText: "Nếu bạn có bất kỳ thắc mắc nào liên quan đến quyền riêng tư, vui lòng liên hệ với chúng tôi qua email: vhung199535@gmail.com.",
+  },
+  aboutPage: {
+    title: "Giới thiệu & Liên hệ",
+    subtitle: "Nền tảng giúp bạn học và luyện tập đọc nốt nhạc trực quan, miễn phí",
+    aboutTitle: "Về FreeSolFa",
+    aboutText: "FreeSolFa được xây dựng với mục tiêu mang đến cho người yêu âm nhạc và học viên tự học một công cụ đơn giản, trực quan để luyện tập phản xạ nhận diện nốt nhạc trên Khóa Sol và Khóa Fa.",
+    missionTitle: "Sứ mệnh của chúng tôi",
+    missionText: "Xóa bỏ rào cản tiếp cận nhạc lý cơ bản, mang lại trải nghiệm học tập nhẹ nhàng, thú vị và hoàn toàn miễn phí cho tất cả mọi người.",
+    contactTitle: "Thông tin liên hệ",
+    contactEmail: "Email: vhung199535@gmail.com",
+    contactWebsite: "Website: https://freesolfa.io.vn",
+  },
   footer: {
     disclaimerTitle: "Miễn trừ trách nhiệm",
     disclaimerText: "FreeSolFa là nền tảng phi lợi nhuận phát triển miễn phí nhằm mục đích hỗ trợ cá nhân tự học và làm quen với nốt nhạc. Trang web không giữ bản quyền thương mại đối với các tài liệu âm nhạc và không chịu trách nhiệm pháp lý về bản quyền liên quan.",
     copyright: "© FreeSolFa • Nền tảng học nốt nhạc phi lợi nhuận",
+    privacy: "Chính sách bảo mật",
+    about: "Giới thiệu & Liên hệ",
   },
   notes: {
     C: "Đồ",

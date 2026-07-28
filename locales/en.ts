@@ -20,6 +20,8 @@ export const en: TranslationType = {
   nav: {
     home: "Home",
     practice: "Practice",
+    about: "About",
+    privacy: "Privacy",
   },
   practice: {
     badge: "Exercise List",
@@ -64,10 +66,33 @@ export const en: TranslationType = {
     roundCompletedSubtitle: "Preparing next sequence...",
     selectNotePrompt: "Select the corresponding note name below",
   },
+  privacyPage: {
+    title: "Privacy Policy",
+    subtitle: "Our commitment to protecting your privacy on FreeSolFa",
+    introTitle: "1. Information Collection",
+    introText: "FreeSolFa is an open, free music learning web app. We do not require account registration or collect sensitive personal data. All your preference settings remain stored locally on your device.",
+    cookiesTitle: "2. Cookies & Advertising (Google AdSense)",
+    cookiesText: "This website uses Google AdSense to serve ads and support server maintenance costs. Google AdSense may use cookies to serve ads based on your visit history to this and other websites.",
+    contactTitle: "3. Questions & Contact",
+    contactText: "If you have any questions regarding our Privacy Policy, please reach out via email: vhung199535@gmail.com.",
+  },
+  aboutPage: {
+    title: "About & Contact",
+    subtitle: "A free, visual music notation learning platform for everyone",
+    aboutTitle: "About FreeSolFa",
+    aboutText: "FreeSolFa was built with the goal of offering music lovers and self-learners a clean, visual tool to improve sight-reading notes on both Treble and Bass clefs.",
+    missionTitle: "Our Mission",
+    missionText: "Lowering barriers to basic music theory, making note reading accessible, engaging, and 100% free for everyone worldwide.",
+    contactTitle: "Contact Information",
+    contactEmail: "Email: vhung199535@gmail.com",
+    contactWebsite: "Website: https://freesolfa.io.vn",
+  },
   footer: {
     disclaimerTitle: "Disclaimer",
     disclaimerText: "FreeSolFa is a free, non-profit educational tool created to help users practice basic music notation reading. This website does not hold commercial copyrights for any sheet music assets and accepts no legal liability regarding copyright claims.",
     copyright: "© FreeSolFa • Free Community Learning Project",
+    privacy: "Privacy Policy",
+    about: "About & Contact",
   },
   notes: {
     C: "Do",
