@@ -26,7 +26,6 @@ export const AdBanner: React.FC<AdBannerProps> = ({
   variant = "horizontal",
 }) => {
   useEffect(() => {
-    // Chỉ kích hoạt AdSense khi có slotId thực tế và đang chạy trên trình duyệt
     if (slotId && typeof window !== "undefined") {
       try {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -36,7 +35,6 @@ export const AdBanner: React.FC<AdBannerProps> = ({
     }
   }, [slotId]);
 
-  // Nếu chưa có slotId (Đang trong quá trình phát triển / Demo UI)
   if (!slotId) {
     if (variant === "skyscraper") {
       return (
@@ -72,7 +70,6 @@ export const AdBanner: React.FC<AdBannerProps> = ({
     );
   }
 
-  // Khung quảng cáo AdSense thực tế khi đưa lên Production
   return (
     <div className={`w-full max-w-5xl mx-auto my-6 overflow-hidden text-center ${className}`}>
       <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">

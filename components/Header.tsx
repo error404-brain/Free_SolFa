@@ -16,7 +16,6 @@ export const Header: React.FC = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200/80 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
           <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl font-bold group-hover:scale-105 transition-transform">
             🎼
@@ -31,7 +30,6 @@ export const Header: React.FC = () => {
           </div>
         </Link>
 
-        {/* Navigation Links */}
         <nav className="hidden md:flex items-center gap-8">
           <Link
             href="/"
@@ -55,9 +53,7 @@ export const Header: React.FC = () => {
           </Link>
         </nav>
 
-        {/* Controls: Language Switcher + Theme Toggle */}
         <div className="flex items-center gap-2">
-          {/* Language Switcher */}
           <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200/60 dark:border-slate-700/60">
             <button
               onClick={() => setLocale("vi")}
@@ -83,7 +79,6 @@ export const Header: React.FC = () => {
             </button>
           </div>
 
-          {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
             aria-label="Toggle theme"

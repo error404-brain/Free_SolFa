@@ -35,17 +35,15 @@ export const useMusicalStaff = ({
   const clefConfig = CLEF_CONFIGS[clef] ?? CLEF_CONFIGS.treble;
 
   return useMemo(() => {
-    const line1Y = TOP_MARGIN + 4 * LINE_SPACING; // Dòng 1 (step 0)
+    const line1Y = TOP_MARGIN + 4 * LINE_SPACING;
     const clefCenterY = TOP_MARGIN + (4 - clefConfig.lineIndex) * LINE_SPACING;
 
-    // Tính chiều rộng tổng của khung nhạc
     const totalWidth = Math.max(
       width,
       NOTES_START_X + actualNotes.length * noteSpacing + 60
     );
     const endX = totalWidth - START_X;
 
-    // Xử lý nốt nhạc & Ottava (8va / 15ma)
     const processedNotes: ProcessedNote[] = actualNotes.map((note, index) => {
       const origStep = getPitchStep(note.pitch, clef);
       let drawStep = origStep;
@@ -72,7 +70,6 @@ export const useMusicalStaff = ({
       };
     });
 
-    // Nhóm các dải Ottava (8va / 15ma)
     const ottavaGroups: OttavaGroup[] = [];
     let currentGroup: OttavaGroup | null = null;
 
@@ -102,14 +99,12 @@ export const useMusicalStaff = ({
     });
     if (currentGroup) ottavaGroups.push(currentGroup);
 
-    // Tính vị trí Y hàng nhãn tên nốt bên dưới sao cho luôn nằm dưới nốt trầm nhất ít nhất 30px
     const maxNoteY =
       processedNotes.length > 0
         ? Math.max(...processedNotes.map((n) => n.noteY))
         : line1Y;
     const labelRowY = Math.max(line1Y + 30, maxNoteY + 30);
 
-    // Tính viewBox động
     const drawSteps = processedNotes.map((n) => n.drawStep);
     const maxStep = drawSteps.length > 0 ? Math.max(...drawSteps) : 8;
 
