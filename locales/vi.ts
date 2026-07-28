@@ -52,9 +52,9 @@ export const vi = {
     ],
   },
   footer: {
-    description: "Nền tảng học ký âm và nhạc lý tương tác miễn phí",
-    copyright: "© 2026 FreeSolFa. Tất cả các quyền được bảo lưu.",
-    builtWith: "",
+    disclaimerTitle: "Miễn trừ trách nhiệm",
+    disclaimerText: "FreeSolFa là nền tảng phi lợi nhuận phát triển miễn phí nhằm mục đích hỗ trợ cá nhân tự học và làm quen với nốt nhạc. Trang web không giữ bản quyền thương mại đối với các tài liệu âm nhạc và không chịu trách nhiệm pháp lý về bản quyền liên quan.",
+    copyright: "© FreeSolFa • Nền tảng học nốt nhạc phi lợi nhuận",
   },
   notes: {
     C: "Đồ",
