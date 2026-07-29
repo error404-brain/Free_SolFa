@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { MusicalStaffProps, NotationMode } from "@/types/music";
 import { useMusicalStaff } from "@/hooks/useMusicalStaff";
 import { getNoteLabel, getLedgerLines } from "@/utils/music";
+import { playNoteSound } from "@/utils/audio";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export const MusicalStaff: React.FC<MusicalStaffProps> = ({
@@ -11,7 +12,7 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
   height,
   noteSpacing,
   useOttava = true,
-  notationMode: initialNotationMode = "solfege",
+  notationMode: initialNotationMode = "letter",
   showModeToggle = true,
   activeIndex,
   showLabels = true,
@@ -86,7 +87,7 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
                   : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium"
               }`}
             >
-              Đồ Rê Mi
+              {t.common.modeSolfege}
             </button>
             <button
               onClick={() => setNotationMode("letter")}
@@ -96,7 +97,17 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
                   : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium"
               }`}
             >
-              A B C
+              {t.common.modeLetter}
+            </button>
+            <button
+              onClick={() => setNotationMode("none")}
+              className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+                notationMode === "none"
+                  ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-xs font-black"
+                  : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium"
+              }`}
+            >
+              {t.common.modeNone}
             </button>
           </div>
         </div>
@@ -165,7 +176,6 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
               fontFamily="Bravura, 'Bravura Text', music, serif"
               fontSize={lineSpacing * clefConfig.fontSizeRatio}
               textAnchor="middle"
-              dominantBaseline="middle"
               className="fill-slate-900 dark:fill-slate-100 transition-colors"
               style={{ userSelect: "none" }}
             >
@@ -244,7 +254,12 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
               : "fill-slate-700 dark:fill-slate-300 font-bold";
 
             return (
-              <g key={index} transform={`translate(${noteX}, ${noteY})`}>
+              <g
+                key={index}
+                transform={`translate(${noteX}, ${noteY})`}
+                onClick={() => playNoteSound(note.pitch)}
+                className="cursor-pointer group/note"
+              >
                 {isActive && (
                   <g transform="translate(0, -22)">
                     <polygon
@@ -254,7 +269,7 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
                     <circle
                       cx="0"
                       cy="22"
-                      r="12"
+                      r="16"
                       fill="none"
                       strokeWidth="2.5"
                       className="stroke-blue-500 dark:stroke-blue-400 opacity-80"
@@ -268,9 +283,9 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
                   return (
                     <line
                       key={lStep}
-                      x1={-13}
+                      x1={-15}
                       y1={lineRelY}
-                      x2={13}
+                      x2={15}
                       y2={lineRelY}
                       strokeWidth="1.5"
                       className={`${strokeClass} transition-colors`}
@@ -278,25 +293,39 @@ export const MusicalStaff: React.FC<MusicalStaffProps> = ({
                   );
                 })}
 
+                {item.accidental && (
+                  <text
+                    x="-18"
+                    y="0"
+                    fontFamily="Bravura, 'Bravura Text', music, serif"
+                    fontSize={lineSpacing * 2.2}
+                    textAnchor="middle"
+                    className={`${fillClass} transition-colors`}
+                    style={{ userSelect: "none" }}
+                  >
+                    {item.accidental === "#" ? "\uE262" : "\uE260"}
+                  </text>
+                )}
+
                 <ellipse
                   cx="0"
                   cy="0"
-                  rx="7.5"
-                  ry="5.5"
+                  rx="10"
+                  ry="7.3"
                   transform="rotate(-20)"
                   className={`${fillClass} transition-colors`}
                 />
 
                 <line
-                  x1={stemUp ? 6 : -6}
+                  x1={stemUp ? 9 : -9}
                   y1={0}
-                  x2={stemUp ? 6 : -6}
+                  x2={stemUp ? 9 : -9}
                   y2={stemUp ? -35 : 35}
                   strokeWidth="2"
                   className={`${strokeClass} transition-colors`}
                 />
 
-                {showLabels && (
+                {showLabels && notationMode !== "none" && (
                   <text
                     x="0"
                     y={labelRowY - noteY}

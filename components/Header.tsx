@@ -4,14 +4,25 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { VN, US } from "country-flag-icons/react/3x2";
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, Volume2, VolumeX } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useTheme } from "@/contexts/ThemeContext";
+import { isSoundMuted, toggleSoundMute } from "@/utils/audio";
 
 export const Header: React.FC = () => {
   const { locale, setLocale, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const pathname = usePathname();
+  const [muted, setMuted] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    setMuted(isSoundMuted());
+  }, []);
+
+  const handleToggleSound = () => {
+    const newMutedState = toggleSoundMute();
+    setMuted(newMutedState);
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200/80 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md transition-colors">
@@ -78,6 +89,19 @@ export const Header: React.FC = () => {
               <span>EN</span>
             </button>
           </div>
+
+          <button
+            onClick={handleToggleSound}
+            aria-label="Toggle sound"
+            title={muted ? "Bật âm thanh" : "Tắt âm thanh"}
+            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700/60 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer flex items-center justify-center"
+          >
+            {muted ? (
+              <VolumeX className="w-4 h-4 text-red-500" />
+            ) : (
+              <Volume2 className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+            )}
+          </button>
 
           <button
             onClick={toggleTheme}

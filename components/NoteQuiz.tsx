@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import MusicalStaff from "@/components/MusicalStaff";
 import { ClefType, Note, NotationMode } from "@/types/music";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { playNoteSound } from "@/utils/audio";
 import {
   CheckCircle2,
   XCircle,
@@ -15,7 +16,10 @@ import {
 import {
   TREBLE_PITCHES_BY_LEVEL,
   BASS_PITCHES_BY_LEVEL,
-  NOTE_CHOICES,
+  NATURAL_CHOICES,
+  SHARP_CHOICES,
+  FLAT_CHOICES,
+  NoteChoice,
   DEFAULT_SEQUENCE_COUNT as SEQUENCE_COUNT,
   DifficultyLevel,
 } from "@/constants/music";
@@ -41,7 +45,10 @@ export const NoteQuiz: React.FC<NoteQuizProps> = ({
   );
   const [isCompletedRound, setIsCompletedRound] = useState<boolean>(false);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
-  const [notationMode, setNotationMode] = useState<NotationMode>("solfege");
+  const [notationMode, setNotationMode] = useState<NotationMode>("letter");
+  const [showAccidentals, setShowAccidentals] = useState<boolean>(
+    initialDifficulty === "medium" || initialDifficulty === "hard"
+  );
 
   const generateNoteSequence = useCallback(
     (selectedClef: ClefType, selectedDiff: DifficultyLevel): Note[] => {
@@ -77,9 +84,12 @@ export const NoteQuiz: React.FC<NoteQuizProps> = ({
     if (isAnimating || notes.length === 0) return;
 
     const targetNote = notes[activeIndex];
-    const correctLetter = targetNote.pitch.charAt(0).toUpperCase();
-    const isRight = choiceLetter === correctLetter;
+    const match = targetNote.pitch.match(/^([A-G])(#|b)?(\d)$/i);
+    const targetOctave = match ? match[3] : "4";
+    const targetKey = match ? `${match[1].toUpperCase()}${match[2] || ""}` : targetNote.pitch;
+    const isRight = choiceLetter === targetKey;
 
+    playNoteSound(`${choiceLetter}${targetOctave}`);
     setIsAnimating(true);
 
     if (isRight) {
@@ -116,15 +126,29 @@ export const NoteQuiz: React.FC<NoteQuizProps> = ({
     }
   };
 
-  const getFormattedNoteLabel = (pitch: string | undefined): string => {
-    if (!pitch) return "";
-    const letter = pitch.charAt(0).toUpperCase();
-    const choice = NOTE_CHOICES.find((c) => c.letter === letter);
-    if (!choice) return pitch;
-    return locale === "vi"
-      ? `${choice.vi} (${letter})`
-      : `${choice.en} (${letter})`;
-  };
+  const renderChoiceRow = (choices: NoteChoice[], keyPrefix: string) => (
+    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2" key={keyPrefix}>
+      {choices.map((item) => {
+        const solName = locale === "vi" ? item.vi : item.en;
+        const mainLabel = notationMode === "letter" ? item.letter : solName;
+        const subLabel = notationMode === "letter" ? solName : item.letter;
+
+        return (
+          <button
+            key={item.letter}
+            onClick={() => handleAnswer(item.letter)}
+            disabled={isAnimating}
+            className="py-2.5 px-2 rounded-xl bg-slate-100 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 hover:bg-blue-600 dark:hover:bg-blue-600 hover:text-white dark:hover:text-white text-slate-800 dark:text-slate-100 font-black text-sm shadow-2xs hover:shadow-md transition-all active:scale-95 disabled:opacity-50 cursor-pointer flex flex-col items-center justify-center gap-0.5 group"
+          >
+            <span>{mainLabel}</span>
+            <span className="text-[10px] font-semibold text-slate-400 group-hover:text-blue-100 dark:group-hover:text-blue-100">
+              ({subLabel})
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
 
   return (
     <div className="w-full max-w-4xl mx-auto flex flex-col gap-6">
@@ -139,8 +163,6 @@ export const NoteQuiz: React.FC<NoteQuizProps> = ({
           </button>
         </div>
       )}
-
-
 
       <div className="relative">
         <MusicalStaff
@@ -167,28 +189,53 @@ export const NoteQuiz: React.FC<NoteQuizProps> = ({
         )}
       </div>
 
-      <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs text-center transition-colors">
-        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-4">
-          {t.quiz.selectNotePrompt}
-        </h4>
+      <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs transition-colors">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+            {t.quiz.selectNotePrompt}
+          </h4>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2.5">
-          {NOTE_CHOICES.map((item) => {
-            const labelText = locale === "vi" ? item.vi : item.en;
-            return (
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={() => setShowAccidentals(!showAccidentals)}
+              className={`px-3 py-1 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                showAccidentals
+                  ? "bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 font-black shadow-2xs"
+                  : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium"
+              }`}
+            >
+              {t.quiz.accidentalsToggle}
+            </button>
+
+            <div className="inline-flex items-center bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-xs font-bold gap-1 transition-colors">
               <button
-                key={item.letter}
-                onClick={() => handleAnswer(item.letter)}
-                disabled={isAnimating}
-                className="py-3 px-2 rounded-xl bg-slate-100 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 hover:bg-blue-600 dark:hover:bg-blue-600 hover:text-white dark:hover:text-white text-slate-800 dark:text-slate-100 font-black text-sm sm:text-base shadow-2xs hover:shadow-md transition-all active:scale-95 disabled:opacity-50 cursor-pointer flex flex-col items-center justify-center gap-0.5 group"
+                onClick={() => setNotationMode("solfege")}
+                className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+                  notationMode === "solfege"
+                    ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-xs font-black"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium"
+                }`}
               >
-                <span>{labelText}</span>
-                <span className="text-[10px] font-semibold text-slate-400 group-hover:text-blue-100 dark:group-hover:text-blue-100">
-                  ({item.letter})
-                </span>
+                {t.common.modeSolfege}
               </button>
-            );
-          })}
+              <button
+                onClick={() => setNotationMode("letter")}
+                className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+                  notationMode === "letter"
+                    ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-xs font-black"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium"
+                }`}
+              >
+                {t.common.modeLetter}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-3">
+          {showAccidentals && renderChoiceRow(SHARP_CHOICES, "sharps")}
+          {renderChoiceRow(NATURAL_CHOICES, "naturals")}
+          {showAccidentals && renderChoiceRow(FLAT_CHOICES, "flats")}
         </div>
       </div>
     </div>
