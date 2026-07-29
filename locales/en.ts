@@ -85,6 +85,8 @@ export const en: TranslationType = {
     roundCompletedTitle: "Staff Completed!",
     roundCompletedSubtitle: "Preparing next sequence...",
     selectNotePrompt: "Select the corresponding note name below",
+    inputMethodButtons: "Buttons",
+    inputMethodPiano: "Piano Keyboard (88 keys)",
     pianoModeScroll: "Scroll",
     pianoModeGlissando: "Glissando",
     pianoOctavePrev: "Lower octave",

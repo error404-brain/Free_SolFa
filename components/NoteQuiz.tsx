@@ -257,7 +257,7 @@ export const NoteQuiz: React.FC<NoteQuizProps> = ({
                   : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium"
               }`}
             >
-              <span>Nút bấm</span>
+              <span>{t.quiz.inputMethodButtons}</span>
             </button>
             <button
               onClick={() => setInputMethod("piano")}
@@ -267,7 +267,7 @@ export const NoteQuiz: React.FC<NoteQuizProps> = ({
                   : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium"
               }`}
             >
-              <span>Bàn phím Piano (88 phím)</span>
+              <span>{t.quiz.inputMethodPiano}</span>
             </button>
           </div>
 
