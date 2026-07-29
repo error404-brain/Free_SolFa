@@ -83,6 +83,10 @@ export const vi = {
     roundCompletedTitle: "Hoàn thành dòng nhạc!",
     roundCompletedSubtitle: "Đang chuẩn bị bản nhạc tiếp theo...",
     selectNotePrompt: "Chọn tên nốt nhạc tương ứng bên dưới",
+    pianoModeScroll: "Cuộn",
+    pianoModeGlissando: "Miết",
+    pianoOctavePrev: "Quãng thấp hơn",
+    pianoOctaveNext: "Quãng cao hơn",
   },
   privacyPage: {
     title: "Chính sách bảo mật",

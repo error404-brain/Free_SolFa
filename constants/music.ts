@@ -145,3 +145,56 @@ export const FLAT_CHOICES: NoteChoice[] = [
 export const NOTE_CHOICES = NATURAL_CHOICES;
 
 export const DEFAULT_SEQUENCE_COUNT = 10;
+
+export interface PianoKeyData {
+  pitch: string;
+  noteLetter: string;
+  isBlack: boolean;
+  octave: number;
+  whiteKeyIndex?: number;
+}
+
+export const generate88PianoKeys = (): PianoKeyData[] => {
+  const keys: PianoKeyData[] = [];
+  let whiteKeyCount = 0;
+
+  // A0, A#0, B0
+  keys.push({ pitch: "A0", noteLetter: "A", isBlack: false, octave: 0, whiteKeyIndex: whiteKeyCount++ });
+  keys.push({ pitch: "A#0", noteLetter: "A#", isBlack: true, octave: 0 });
+  keys.push({ pitch: "B0", noteLetter: "B", isBlack: false, octave: 0, whiteKeyIndex: whiteKeyCount++ });
+
+  // Octaves 1 to 7
+  for (let octave = 1; octave <= 7; octave++) {
+    const notesInOctave = [
+      { letter: "C", isBlack: false },
+      { letter: "C#", isBlack: true },
+      { letter: "D", isBlack: false },
+      { letter: "D#", isBlack: true },
+      { letter: "E", isBlack: false },
+      { letter: "F", isBlack: false },
+      { letter: "F#", isBlack: true },
+      { letter: "G", isBlack: false },
+      { letter: "G#", isBlack: true },
+      { letter: "A", isBlack: false },
+      { letter: "A#", isBlack: true },
+      { letter: "B", isBlack: false },
+    ];
+
+    notesInOctave.forEach((n) => {
+      keys.push({
+        pitch: `${n.letter}${octave}`,
+        noteLetter: n.letter,
+        isBlack: n.isBlack,
+        octave,
+        whiteKeyIndex: !n.isBlack ? whiteKeyCount++ : undefined,
+      });
+    });
+  }
+
+  // C8
+  keys.push({ pitch: "C8", noteLetter: "C", isBlack: false, octave: 8, whiteKeyIndex: whiteKeyCount++ });
+
+  return keys;
+};
+
+export const PIANO_88_KEYS = generate88PianoKeys();
