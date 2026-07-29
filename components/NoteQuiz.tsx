@@ -317,7 +317,7 @@ export const NoteQuiz: React.FC<NoteQuizProps> = ({
           <PianoKeyboard
             onKeyPress={handlePianoAnswer}
             activePitch={lastPressedPitch || undefined}
-            targetScrollPitch={notes[activeIndex]?.pitch}
+            initialCenterPitch={clef === "bass" ? "C3" : "C4"}
             disabled={isAnimating}
             activeStatus={feedback}
           />

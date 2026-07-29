@@ -13,10 +13,18 @@ const MIN_OCTAVE = 1;
 const MAX_OCTAVE = 7;
 const DRAG_THRESHOLD = 4; // px of travel before a press counts as a drag
 
+const clampOctave = (octave: number) =>
+  Math.min(MAX_OCTAVE, Math.max(MIN_OCTAVE, octave));
+
 export interface PianoKeyboardProps {
   onKeyPress?: (pitch: string) => void;
   activePitch?: string;
-  targetScrollPitch?: string;
+  /**
+   * Where to centre the keyboard on mount. Fixed for the whole round — never
+   * derive it from the current answer, or the correct key lands dead-centre
+   * every question and gives the answer away.
+   */
+  initialCenterPitch?: string;
   disabled?: boolean;
   activeStatus?: "correct" | "incorrect" | null;
 }
@@ -24,7 +32,7 @@ export interface PianoKeyboardProps {
 export const PianoKeyboard: React.FC<PianoKeyboardProps> = ({
   onKeyPress,
   activePitch,
-  targetScrollPitch,
+  initialCenterPitch = "C4",
   disabled = false,
   activeStatus,
 }) => {
@@ -32,7 +40,9 @@ export const PianoKeyboard: React.FC<PianoKeyboardProps> = ({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [pressedKeyPitch, setPressedKeyPitch] = useState<string | null>(null);
   const [dragMode, setDragMode] = useState<DragMode>("scroll");
-  const [currentOctave, setCurrentOctave] = useState<number>(4);
+  const [currentOctave, setCurrentOctave] = useState<number>(() =>
+    clampOctave(parseInt(initialCenterPitch.match(/\d/)?.[0] ?? "4", 10)),
+  );
 
   const flashTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dragRef = useRef<{
@@ -91,18 +101,14 @@ export const PianoKeyboard: React.FC<PianoKeyboardProps> = ({
   };
 
   useEffect(() => {
-    // Auto-scroll to target pitch or Middle C (C4) on initial mount
+    // Centre the starting octave once on mount, after layout has settled.
     const timer = setTimeout(() => {
-      scrollToPitch(targetScrollPitch || activePitch || "C4");
-    }, 150);
+      scrollToPitch(initialCenterPitch);
+    }, 100);
     return () => clearTimeout(timer);
+    // Mount-only on purpose: re-centring later would fight the user's scrolling.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    if (targetScrollPitch) {
-      scrollToPitch(targetScrollPitch);
-    }
-  }, [targetScrollPitch]);
 
   useEffect(
     () => () => {
@@ -199,7 +205,7 @@ export const PianoKeyboard: React.FC<PianoKeyboardProps> = ({
   };
 
   const goToOctave = (octave: number) => {
-    const next = Math.min(MAX_OCTAVE, Math.max(MIN_OCTAVE, octave));
+    const next = clampOctave(octave);
     setCurrentOctave(next);
     scrollToPitch(`C${next}`);
   };
@@ -218,10 +224,7 @@ export const PianoKeyboard: React.FC<PianoKeyboardProps> = ({
     const centerKey =
       whiteKeys[Math.min(whiteKeys.length - 1, Math.max(0, centerIndex))];
     if (!centerKey) return;
-    const octave = Math.min(
-      MAX_OCTAVE,
-      Math.max(MIN_OCTAVE, centerKey.octave),
-    );
+    const octave = clampOctave(centerKey.octave);
     setCurrentOctave((prev) => (prev === octave ? prev : octave));
   };
 
