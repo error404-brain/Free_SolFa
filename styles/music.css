@@ -9,38 +9,3 @@
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
-
-/* Custom sleek scrollbar for horizontal staff scrolling */
-.custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 #f8fafc;
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
-  overscroll-behavior-x: contain;
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-  height: 7px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-radius: 9999px;
-  margin-inline: 12px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 9999px;
-  border: 2px solid #f1f5f9;
-  background-clip: padding-box;
-  transition: background-color 0.2s ease, border-width 0.2s ease;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:active {
-  background: #3b82f6;
-}

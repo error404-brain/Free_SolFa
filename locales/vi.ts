@@ -83,6 +83,8 @@ export const vi = {
     roundCompletedTitle: "Hoàn thành dòng nhạc!",
     roundCompletedSubtitle: "Đang chuẩn bị bản nhạc tiếp theo...",
     selectNotePrompt: "Chọn tên nốt nhạc tương ứng bên dưới",
+    inputMethodButtons: "Nút bấm",
+    inputMethodPiano: "Bàn phím Piano (88 phím)",
     pianoModeScroll: "Cuộn",
     pianoModeGlissando: "Miết",
     pianoOctavePrev: "Quãng thấp hơn",

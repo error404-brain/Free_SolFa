@@ -294,7 +294,7 @@ export const PianoKeyboard: React.FC<PianoKeyboardProps> = ({
           touchAction: dragMode === "glissando" ? "none" : "pan-x",
           cursor: dragMode === "scroll" ? "grab" : "pointer",
         }}
-        className="w-full overflow-x-auto select-none rounded-2xl bg-slate-950 p-4 border border-slate-800 shadow-md custom-scrollbar relative"
+        className="w-full overflow-x-auto select-none rounded-2xl bg-slate-950 p-4 border border-slate-800 shadow-md no-scrollbar relative"
       >
         <div
           className="relative"
