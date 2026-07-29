@@ -12,6 +12,28 @@ export const getPitchStep = (pitch: string, clef: ClefType = "treble"): number =
   return absoluteStep - clefOffset;
 };
 
+const SEMITONE_OFFSETS: Record<string, number> = {
+  C: 0,
+  D: 2,
+  E: 4,
+  F: 5,
+  G: 7,
+  A: 9,
+  B: 11,
+};
+
+/**
+ * MIDI number for a pitch, so enharmonic spellings compare equal
+ * (Db4 and C#4 both yield 61).
+ */
+export const pitchToMidi = (pitch: string): number | null => {
+  const match = pitch.match(/^([A-G])(#|b)?(\d)$/i);
+  if (!match) return null;
+  const semitone = SEMITONE_OFFSETS[match[1].toUpperCase()] ?? 0;
+  const accidental = match[2] === "#" ? 1 : match[2] === "b" ? -1 : 0;
+  return (parseInt(match[3], 10) + 1) * 12 + semitone + accidental;
+};
+
 export const getPitchAccidental = (pitch: string): "#" | "b" | null => {
   const match = pitch.match(/^([A-G])(#|b)?(\d)$/i);
   if (!match || !match[2]) return null;

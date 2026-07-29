@@ -2,16 +2,12 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import MusicalStaff from "@/components/MusicalStaff";
+import PianoKeyboard from "@/components/PianoKeyboard";
 import { ClefType, Note, NotationMode } from "@/types/music";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { playNoteSound } from "@/utils/audio";
-import {
-  CheckCircle2,
-  XCircle,
-  Music,
-  Music2,
-  ArrowLeft,
-} from "lucide-react";
+import { pitchToMidi } from "@/utils/music";
+import { CheckCircle2, XCircle, Music, Music2, ArrowLeft } from "lucide-react";
 
 import {
   TREBLE_PITCHES_BY_LEVEL,
@@ -37,7 +33,8 @@ export const NoteQuiz: React.FC<NoteQuizProps> = ({
 }) => {
   const { t, locale } = useLanguage();
   const [clef, setClef] = useState<ClefType>(initialClef);
-  const [difficulty, setDifficulty] = useState<DifficultyLevel>(initialDifficulty);
+  const [difficulty, setDifficulty] =
+    useState<DifficultyLevel>(initialDifficulty);
   const [notes, setNotes] = useState<Note[]>([]);
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [feedback, setFeedback] = useState<"correct" | "incorrect" | null>(
@@ -46,8 +43,12 @@ export const NoteQuiz: React.FC<NoteQuizProps> = ({
   const [isCompletedRound, setIsCompletedRound] = useState<boolean>(false);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [notationMode, setNotationMode] = useState<NotationMode>("letter");
+  const [inputMethod, setInputMethod] = useState<"buttons" | "piano">(
+    "buttons",
+  );
+  const [lastPressedPitch, setLastPressedPitch] = useState<string | null>(null);
   const [showAccidentals, setShowAccidentals] = useState<boolean>(
-    initialDifficulty === "medium" || initialDifficulty === "hard"
+    initialDifficulty === "medium" || initialDifficulty === "hard",
   );
 
   const generateNoteSequence = useCallback(
@@ -70,13 +71,14 @@ export const NoteQuiz: React.FC<NoteQuizProps> = ({
 
       return seq;
     },
-    []
+    [],
   );
 
   useEffect(() => {
     setNotes(generateNoteSequence(clef, difficulty));
     setActiveIndex(0);
     setFeedback(null);
+    setLastPressedPitch(null);
     setIsCompletedRound(false);
   }, [clef, difficulty, generateNoteSequence]);
 
@@ -86,7 +88,9 @@ export const NoteQuiz: React.FC<NoteQuizProps> = ({
     const targetNote = notes[activeIndex];
     const match = targetNote.pitch.match(/^([A-G])(#|b)?(\d)$/i);
     const targetOctave = match ? match[3] : "4";
-    const targetKey = match ? `${match[1].toUpperCase()}${match[2] || ""}` : targetNote.pitch;
+    const targetKey = match
+      ? `${match[1].toUpperCase()}${match[2] || ""}`
+      : targetNote.pitch;
     const isRight = choiceLetter === targetKey;
 
     playNoteSound(`${choiceLetter}${targetOctave}`);
@@ -126,8 +130,59 @@ export const NoteQuiz: React.FC<NoteQuizProps> = ({
     }
   };
 
+  const handlePianoAnswer = (pressedPitch: string) => {
+    if (isAnimating || notes.length === 0) return;
+
+    setLastPressedPitch(pressedPitch);
+    const targetNote = notes[activeIndex];
+    // Compare by pitch, not by spelling: the keyboard only names black keys
+    // with sharps, so Db4 must still match the C#4 key.
+    const pressedMidi = pitchToMidi(pressedPitch);
+    const targetMidi = pitchToMidi(targetNote.pitch);
+    const isRight = pressedMidi !== null && pressedMidi === targetMidi;
+
+    setIsAnimating(true);
+
+    if (isRight) {
+      const updatedNotes = [...notes];
+      updatedNotes[activeIndex] = { ...targetNote, status: "correct" };
+      setNotes(updatedNotes);
+      setFeedback("correct");
+
+      setTimeout(() => {
+        setFeedback(null);
+        setLastPressedPitch(null);
+        if (activeIndex < SEQUENCE_COUNT - 1) {
+          setActiveIndex((prev) => prev + 1);
+          setIsAnimating(false);
+        } else {
+          setIsCompletedRound(true);
+          setTimeout(() => {
+            setNotes(generateNoteSequence(clef, difficulty));
+            setActiveIndex(0);
+            setIsCompletedRound(false);
+            setIsAnimating(false);
+          }, 900);
+        }
+      }, 400);
+    } else {
+      const updatedNotes = [...notes];
+      updatedNotes[activeIndex] = { ...targetNote, status: "incorrect" };
+      setNotes(updatedNotes);
+      setFeedback("incorrect");
+
+      setTimeout(() => {
+        setFeedback(null);
+        setIsAnimating(false);
+      }, 900);
+    }
+  };
+
   const renderChoiceRow = (choices: NoteChoice[], keyPrefix: string) => (
-    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2" key={keyPrefix}>
+    <div
+      className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2"
+      key={keyPrefix}
+    >
       {choices.map((item) => {
         const solName = locale === "vi" ? item.vi : item.en;
         const mainLabel = notationMode === "letter" ? item.letter : solName;
@@ -190,53 +245,89 @@ export const NoteQuiz: React.FC<NoteQuizProps> = ({
       </div>
 
       <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs transition-colors">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-            {t.quiz.selectNotePrompt}
-          </h4>
-
-          <div className="flex flex-wrap items-center gap-2">
+        {/* Top Control Bar */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-100 dark:border-slate-800/80">
+          {/* Left: Input Method Pill Segmented Control */}
+          <div className="inline-flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-xs font-bold gap-1 self-start">
             <button
-              onClick={() => setShowAccidentals(!showAccidentals)}
-              className={`px-3 py-1 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
-                showAccidentals
-                  ? "bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 font-black shadow-2xs"
-                  : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium"
+              onClick={() => setInputMethod("buttons")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
+                inputMethod === "buttons"
+                  ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-xs font-black"
+                  : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium"
               }`}
             >
-              {t.quiz.accidentalsToggle}
+              <span>Nút bấm</span>
             </button>
+            <button
+              onClick={() => setInputMethod("piano")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
+                inputMethod === "piano"
+                  ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-xs font-black"
+                  : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium"
+              }`}
+            >
+              <span>Bàn phím Piano (88 phím)</span>
+            </button>
+          </div>
 
-            <div className="inline-flex items-center bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-xs font-bold gap-1 transition-colors">
+          {/* Right: Options (Accidentals Toggle & Notation Toggle) */}
+          <div className="flex items-center gap-2 flex-wrap">
+            {inputMethod === "buttons" && (
               <button
-                onClick={() => setNotationMode("solfege")}
-                className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
-                  notationMode === "solfege"
-                    ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-xs font-black"
-                    : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium"
+                onClick={() => setShowAccidentals(!showAccidentals)}
+                className={`px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                  showAccidentals
+                    ? "bg-blue-50 dark:bg-blue-950/60 border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 font-black shadow-2xs"
+                    : "bg-slate-100 dark:bg-slate-800 border-slate-200/60 dark:border-slate-700/60 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium"
                 }`}
               >
-                {t.common.modeSolfege}
+                {t.quiz.accidentalsToggle}
               </button>
-              <button
-                onClick={() => setNotationMode("letter")}
-                className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
-                  notationMode === "letter"
-                    ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-xs font-black"
-                    : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium"
-                }`}
-              >
-                {t.common.modeLetter}
-              </button>
-            </div>
+            )}
+
+            {inputMethod === "buttons" && (
+              <div className="inline-flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200/60 dark:border-slate-700/60 text-xs font-bold gap-1 transition-colors">
+                <button
+                  onClick={() => setNotationMode("solfege")}
+                  className={`px-3 py-1 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
+                    notationMode === "solfege"
+                      ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-xs font-black"
+                      : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium"
+                  }`}
+                >
+                  {t.common.modeSolfege}
+                </button>
+                <button
+                  onClick={() => setNotationMode("letter")}
+                  className={`px-3 py-1 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
+                    notationMode === "letter"
+                      ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-xs font-black"
+                      : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium"
+                  }`}
+                >
+                  {t.common.modeLetter}
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="flex flex-col gap-3">
-          {showAccidentals && renderChoiceRow(SHARP_CHOICES, "sharps")}
-          {renderChoiceRow(NATURAL_CHOICES, "naturals")}
-          {showAccidentals && renderChoiceRow(FLAT_CHOICES, "flats")}
-        </div>
+        {inputMethod === "piano" ? (
+          <PianoKeyboard
+            onKeyPress={handlePianoAnswer}
+            activePitch={lastPressedPitch || undefined}
+            targetScrollPitch={notes[activeIndex]?.pitch}
+            disabled={isAnimating}
+            activeStatus={feedback}
+          />
+        ) : (
+          <div className="flex flex-col gap-3">
+            {showAccidentals && renderChoiceRow(SHARP_CHOICES, "sharps")}
+            {renderChoiceRow(NATURAL_CHOICES, "naturals")}
+            {showAccidentals && renderChoiceRow(FLAT_CHOICES, "flats")}
+          </div>
+        )}
       </div>
     </div>
   );

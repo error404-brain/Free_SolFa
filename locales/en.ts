@@ -85,6 +85,10 @@ export const en: TranslationType = {
     roundCompletedTitle: "Staff Completed!",
     roundCompletedSubtitle: "Preparing next sequence...",
     selectNotePrompt: "Select the corresponding note name below",
+    pianoModeScroll: "Scroll",
+    pianoModeGlissando: "Glissando",
+    pianoOctavePrev: "Lower octave",
+    pianoOctaveNext: "Higher octave",
   },
   privacyPage: {
     title: "Privacy Policy",
