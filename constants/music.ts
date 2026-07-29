@@ -13,15 +13,15 @@ export const CLEF_CONFIGS: Record<ClefType, ClefConfig> = {
     glyph: "\uE050",
     lineIndex: 1,
     basePitchOffset: 0,
-    yOffset: 2,
-    fontSizeRatio: 4.2,
+    yOffset: 0,
+    fontSizeRatio: 4.0,
   },
   bass: {
     glyph: "\uE062",
     lineIndex: 3,
     basePitchOffset: -12,
     yOffset: 0,
-    fontSizeRatio: 4.2,
+    fontSizeRatio: 4.0,
   },
   alto: {
     glyph: "\uE05C",
@@ -86,45 +86,19 @@ export type DifficultyLevel = "easy" | "medium" | "hard";
 
 export const TREBLE_PITCHES_BY_LEVEL: Record<DifficultyLevel, string[]> = {
   easy: ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"],
-  medium: ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5", "D5", "E5", "F5", "G5"],
+  medium: ["C4", "C#4", "Db4", "D4", "D#4", "Eb4", "E4", "F4", "F#4", "Gb4", "G4", "G#4", "Ab4", "A4", "A#4", "Bb4", "B4", "C5"],
   hard: [
-    "C4",
-    "D4",
-    "E4",
-    "F4",
-    "G4",
-    "A4",
-    "B4",
-    "C5",
-    "D5",
-    "E5",
-    "F5",
-    "G5",
-    "A5",
-    "B5",
-    "C6",
+    "C4", "C#4", "Db4", "D4", "D#4", "Eb4", "E4", "F4", "F#4", "Gb4", "G4", "G#4", "Ab4", "A4", "A#4", "Bb4", "B4",
+    "C5", "C#5", "Db5", "D5", "D#5", "Eb5", "E5", "F5", "F#5", "Gb5", "G5", "G#5", "Ab5", "A5", "A#5", "Bb5", "B5", "C6"
   ],
 };
 
 export const BASS_PITCHES_BY_LEVEL: Record<DifficultyLevel, string[]> = {
   easy: ["C3", "D3", "E3", "F3", "G3", "A3", "B3", "C4"],
-  medium: ["G2", "A2", "B2", "C3", "D3", "E3", "F3", "G3", "A3", "B3", "C4"],
+  medium: ["C3", "C#3", "Db3", "D3", "D#3", "Eb3", "E3", "F3", "F#3", "Gb3", "G3", "G#3", "Ab3", "A3", "A#3", "Bb3", "B3", "C4"],
   hard: [
-    "C2",
-    "D2",
-    "E2",
-    "F2",
-    "G2",
-    "A2",
-    "B2",
-    "C3",
-    "D3",
-    "E3",
-    "F3",
-    "G3",
-    "A3",
-    "B3",
-    "C4",
+    "C2", "D2", "E2", "F2", "G2", "A2", "B2",
+    "C3", "C#3", "Db3", "D3", "D#3", "Eb3", "E3", "F3", "F#3", "Gb3", "G3", "G#3", "Ab3", "A3", "A#3", "Bb3", "B3", "C4"
   ],
 };
 
@@ -135,9 +109,10 @@ export interface NoteChoice {
   letter: string;
   vi: string;
   en: string;
+  accidental?: "#" | "b";
 }
 
-export const NOTE_CHOICES: NoteChoice[] = [
+export const NATURAL_CHOICES: NoteChoice[] = [
   { letter: "C", vi: "Đồ", en: "Do" },
   { letter: "D", vi: "Rê", en: "Re" },
   { letter: "E", vi: "Mi", en: "Mi" },
@@ -146,5 +121,27 @@ export const NOTE_CHOICES: NoteChoice[] = [
   { letter: "A", vi: "La", en: "La" },
   { letter: "B", vi: "Si", en: "Si" },
 ];
+
+export const SHARP_CHOICES: NoteChoice[] = [
+  { letter: "C#", vi: "Đồ♯", en: "Do♯", accidental: "#" },
+  { letter: "D#", vi: "Rê♯", en: "Re♯", accidental: "#" },
+  { letter: "E#", vi: "Mi♯", en: "Mi♯", accidental: "#" },
+  { letter: "F#", vi: "Fa♯", en: "Fa♯", accidental: "#" },
+  { letter: "G#", vi: "Sol♯", en: "Sol♯", accidental: "#" },
+  { letter: "A#", vi: "La♯", en: "La♯", accidental: "#" },
+  { letter: "B#", vi: "Si♯", en: "Ti♯", accidental: "#" },
+];
+
+export const FLAT_CHOICES: NoteChoice[] = [
+  { letter: "Cb", vi: "Đồ♭", en: "Do♭", accidental: "b" },
+  { letter: "Db", vi: "Rê♭", en: "Re♭", accidental: "b" },
+  { letter: "Eb", vi: "Mi♭", en: "Mi♭", accidental: "b" },
+  { letter: "Fb", vi: "Fa♭", en: "Fa♭", accidental: "b" },
+  { letter: "Gb", vi: "Sol♭", en: "Sol♭", accidental: "b" },
+  { letter: "Ab", vi: "La♭", en: "La♭", accidental: "b" },
+  { letter: "Bb", vi: "Si♭", en: "Ti♭", accidental: "b" },
+];
+
+export const NOTE_CHOICES = NATURAL_CHOICES;
 
 export const DEFAULT_SEQUENCE_COUNT = 10;

@@ -12,7 +12,7 @@ import {
   NOTES_START_X,
   CLEF_CONFIGS,
 } from "@/constants/music";
-import { getPitchStep } from "@/utils/music";
+import { getPitchStep, getPitchAccidental } from "@/utils/music";
 
 interface UseMusicalStaffOptions {
   clef?: ClefType;
@@ -46,6 +46,7 @@ export const useMusicalStaff = ({
 
     const processedNotes: ProcessedNote[] = actualNotes.map((note, index) => {
       const origStep = getPitchStep(note.pitch, clef);
+      const accidental = getPitchAccidental(note.pitch);
       let drawStep = origStep;
       let ottava: "8va" | "15ma" | null = null;
 
@@ -67,6 +68,7 @@ export const useMusicalStaff = ({
         ottava,
         noteX,
         noteY,
+        accidental,
       };
     });
 

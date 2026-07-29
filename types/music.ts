@@ -1,5 +1,5 @@
 export type ClefType = "treble" | "bass" | "alto";
-export type NotationMode = "solfege" | "letter";
+export type NotationMode = "solfege" | "letter" | "none";
 
 export interface Note {
   pitch: string;
@@ -15,6 +15,7 @@ export interface ProcessedNote {
   ottava: OttavaType | null;
   noteX: number;
   noteY: number;
+  accidental?: "#" | "b" | null;
 }
 
 export interface OttavaGroup {

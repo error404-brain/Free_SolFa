@@ -12,9 +12,15 @@ export const getPitchStep = (pitch: string, clef: ClefType = "treble"): number =
   return absoluteStep - clefOffset;
 };
 
+export const getPitchAccidental = (pitch: string): "#" | "b" | null => {
+  const match = pitch.match(/^([A-G])(#|b)?(\d)$/i);
+  if (!match || !match[2]) return null;
+  return match[2] as "#" | "b";
+};
+
 export const getNoteLabel = (
   pitch: string,
-  mode: NotationMode = "solfege",
+  mode: NotationMode = "letter",
   customNames?: Record<string, string>
 ): string => {
   const match = pitch.match(/^([A-G])(#|b)?(\d)?$/i);
